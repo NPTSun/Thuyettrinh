@@ -1,0 +1,1661 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hệ Thống Hỗ Trợ Và Tìm Kiếm Trọ Cho Sinh Viên Tại Huế - Nhóm 11</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+    <style>
+        :root {
+            --primary: #2563EB;
+            --primary-light: #3B82F6;
+            --primary-soft: #DBEAFE;
+            --accent: #F59E0B;
+            --accent-soft: #FEF3C7;
+            --success: #10B981;
+            --success-soft: #D1FAE5;
+            --danger: #EF4444;
+            --danger-soft: #FEE2E2;
+            --purple: #8B5CF6;
+            --purple-soft: #EDE9FE;
+            --bg: #F8FAFC;
+            --bg-card: #FFFFFF;
+            --bg-dark: #1E293B;
+            --text-main: #1E293B;
+            --text-secondary: #64748B;
+            --text-muted: #94A3B8;
+            --border: #E2E8F0;
+            --shadow: 0 1px 3px rgba(0,0,0,0.06), 0 1px 2px rgba(0,0,0,0.04);
+            --shadow-md: 0 4px 6px -1px rgba(0,0,0,0.07), 0 2px 4px -2px rgba(0,0,0,0.05);
+            --shadow-lg: 0 10px 15px -3px rgba(0,0,0,0.08), 0 4px 6px -4px rgba(0,0,0,0.05);
+            --radius: 16px;
+            --radius-sm: 10px;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        html { scroll-behavior: smooth;
+        font-size: 21px; }
+
+        body {
+            font-family: 'Roboto', -apple-system, sans-serif;
+            background: var(--bg);
+            color: var(--text-main);
+            line-height: 1.7;
+            overflow-x: hidden;
+        }
+
+        /* ===== SIDE NAV DOT INDICATOR ===== */
+        .side-nav {
+            position: fixed;
+            right: 24px;
+            top: 50%;
+            transform: translateY(-50%);
+            z-index: 1000;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+        .side-nav a {
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            background: var(--text-muted);
+            opacity: 0.4;
+            transition: all 0.3s;
+            display: block;
+        }
+        .side-nav a:hover,
+        .side-nav a.active {
+            opacity: 1;
+            background: var(--primary);
+            transform: scale(1.4);
+        }
+
+        /* ===== SECTIONS ===== */
+        .slide {
+            min-height: 100vh;
+            padding: 80px 8% 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            position: relative;
+            opacity: 0;
+            transform: translateY(40px);
+            transition: opacity 0.7s ease, transform 0.7s ease;
+        }
+        .slide.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        .section-label {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1.5px;
+            color: var(--primary);
+            background: var(--primary-soft);
+            padding: 6px 16px;
+            border-radius: 50px;
+            margin-bottom: 16px;
+            width: fit-content;
+        }
+
+        .section-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.6rem;
+            font-weight: 700;
+            color: var(--text-main);
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+        .section-title span {
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .section-desc {
+            color: var(--text-secondary);
+            font-size: 1.05rem;
+            max-width: 640px;
+            margin-bottom: 40px;
+        }
+
+        /* ===== CARDS ===== */
+        .card {
+            background: var(--bg-card);
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            font-size: 25px;
+        }
+        .card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-3px);
+        }
+
+        .card-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+        .card-icon {
+            width: 44px;
+            height: 44px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .card-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 30px;
+        }
+
+        /* ===== GRIDS ===== */
+        .grid-2 { display: grid; grid-template-columns: repeat(2, 1fr); gap: 24px; }
+        .grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+        .grid-4 { display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px; }
+
+        @media (max-width: 1024px) {
+            .grid-4 { grid-template-columns: repeat(2, 1fr); }
+            .grid-3 { grid-template-columns: repeat(2, 1fr); }
+        }
+        @media (max-width: 768px) {
+            .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+            .section-title { font-size: 2rem; }
+            .slide { padding: 60px 5% 40px; }
+            .side-nav { display: none; }
+            .hero-stats { flex-direction: column; }
+        }
+
+        /* ===== HERO ===== */
+        #hero {
+            text-align: center;
+            align-items: center;
+            background: linear-gradient(160deg, #F0F4FF 0%, #FAFBFF 40%, #FFF7ED 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        #hero::before {
+            content: '';
+            position: absolute;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(37,99,235,0.06) 0%, transparent 70%);
+            top: -100px;
+            right: -100px;
+            border-radius: 50%;
+        }
+        #hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(245,158,11,0.05) 0%, transparent 70%);
+            bottom: -80px;
+            left: -80px;
+            border-radius: 50%;
+        }
+
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: white;
+            border: 1px solid var(--border);
+            padding: 8px 20px;
+            border-radius: 50px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            color: var(--text-secondary);
+            box-shadow: var(--shadow);
+            margin-bottom: 28px;
+            z-index: 1;
+        }
+        .hero-badge i { color: var(--accent); }
+
+        .hero-title {
+            font-family: 'Inter', sans-serif;
+            font-size: 3.8rem;
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 20px;
+            color: var(--text-main);
+            z-index: 1;
+        }
+        .hero-title .highlight {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--purple) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-sub {
+            font-size: 1.15rem;
+            color: var(--text-secondary);
+            max-width: 580px;
+            margin-bottom: 40px;
+            z-index: 1;
+        }
+
+        .hero-info-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+            max-width: 850px;
+            width: 100%;
+            z-index: 1;
+        }
+        .hero-info-item {
+            background: white;
+            border: 1px solid var(--border);
+            padding: 16px;
+            border-radius: var(--radius);
+            box-shadow: var(--shadow);
+            text-align: left;
+        }
+        .hero-info-item label {
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: var(--primary);
+            display: block;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .hero-info-item p {
+            text-align: center;
+            font-weight: 600;
+            font-size: 0.95rem;
+            color: var(--text-main);
+        }
+
+        @media (max-width: 768px) {
+            .hero-title { font-size: 2.5rem; }
+            .hero-info-grid { grid-template-columns: 1fr; }
+        }
+
+        /* ===== OUTLINE (Glassmorphism Light) ===== */
+        #outline {
+            background: linear-gradient(135deg, #EEF2FF 0%, #F0F9FF 30%, #FDF4FF 60%, #FFF7ED 100%);
+            position: relative;
+            overflow: hidden;
+        }
+        #outline::before {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(37,99,235,0.08) 0%, transparent 70%);
+            top: -100px;
+            left: -50px;
+            border-radius: 50%;
+        }
+        #outline::after {
+            content: '';
+            position: absolute;
+            width: 350px;
+            height: 350px;
+            background: radial-gradient(circle, rgba(139,92,246,0.07) 0%, transparent 70%);
+            bottom: -80px;
+            right: -50px;
+            border-radius: 50%;
+        }
+        .outline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 16px;
+            position: relative;
+            z-index: 1;
+        }
+        .outline-item {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            padding: 20px 24px;
+            background: rgba(255,255,255,0.65);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            border: 1px solid rgba(255,255,255,0.8);
+            border-radius: 14px;
+            font-weight: 500;
+            font-size: 0.95rem;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.04), 0 1px 3px rgba(0,0,0,0.03);
+            cursor: default;
+        }
+        .outline-item:hover {
+            background: rgba(255,255,255,0.85);
+            border-color: rgba(37,99,235,0.25);
+            box-shadow: 0 8px 30px rgba(37,99,235,0.08), 0 2px 8px rgba(0,0,0,0.04);
+            transform: translateY(-3px);
+        }
+        .outline-num {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary), var(--purple));
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 0.9rem;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(37,99,235,0.2);
+        }
+
+        /* ===== BIG NUMBER STATS ===== */
+        .stat-card {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            position: relative;
+            overflow: hidden;
+        }
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+        }
+        .stat-card.blue::before { background: var(--primary); }
+        .stat-card.amber::before { background: var(--accent); }
+        .stat-card.red::before { background: var(--danger); }
+        .stat-card.green::before { background: var(--success); }
+
+        .stat-icon {
+            width: 48px;
+            height: 48px;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 14px;
+            font-size: 1.2rem;
+        }
+        .stat-card.blue .stat-icon { background: var(--primary-soft); color: var(--primary); }
+        .stat-card.amber .stat-icon { background: var(--accent-soft); color: var(--accent); }
+        .stat-card.red .stat-icon { background: var(--danger-soft); color: var(--danger); }
+        .stat-card.green .stat-icon { background: var(--success-soft); color: var(--success); }
+
+        .stat-number {
+            font-family: 'Inter', sans-serif;
+            font-size: 2.4rem;
+            font-weight: 800;
+            line-height: 1;
+            margin-bottom: 6px;
+        }
+        .stat-card.blue .stat-number { color: var(--primary); }
+        .stat-card.amber .stat-number { color: var(--accent); }
+        .stat-card.red .stat-number { color: var(--danger); }
+        .stat-card.green .stat-number { color: var(--success); }
+
+        .stat-label {
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* ===== CHART CONTAINERS ===== */
+        .chart-container {
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius);
+            padding: 28px;
+            box-shadow: var(--shadow);
+        }
+        .chart-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 1rem;
+            margin-bottom: 20px;
+            color: var(--text-main);
+        }
+        .chart-wrapper {
+            position: relative;
+            width: 100%;
+        }
+
+        /* ===== ALERT / WARNING WIDGET ===== */
+        .alert-widget {
+            background: linear-gradient(135deg, #FEF2F2, #FFF1F2);
+            border: 1px solid #FECACA;
+            border-radius: var(--radius);
+            padding: 28px;
+            display: flex;
+            gap: 20px;
+            align-items: flex-start;
+        }
+        .alert-icon-wrap {
+            width: 52px;
+            height: 52px;
+            background: var(--danger);
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.3rem;
+            flex-shrink: 0;
+        }
+        .alert-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            font-size: 1.1rem;
+            color: var(--danger);
+            margin-bottom: 6px;
+        }
+        .alert-text {
+            font-size: 0.9rem;
+            color: #7F1D1D;
+            line-height: 1.6;
+        }
+        .alert-tag {
+            display: inline-block;
+            background: var(--danger);
+            color: white;
+            padding: 3px 10px;
+            border-radius: 6px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+
+        /* ===== PAIN POINT BARS ===== */
+        .pain-bar-list {
+            display: flex;
+            flex-direction: column;
+            gap: 14px;
+        }
+        .pain-bar-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .pain-bar-label {
+            width: 350px;
+            font-size: 21px;
+            color: var(--text-secondary);
+            text-align: right;
+            flex-shrink: 0;
+            font-weight: 500;
+        }
+        .pain-bar-track {
+            flex: 1;
+            height: 28px;
+            background: #F1F5F9;
+            border-radius: 8px;
+            overflow: hidden;
+            position: relative;
+        }
+        .pain-bar-fill {
+            height: 100%;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: flex-end;
+            padding-right: 10px;
+            font-size: 0.78rem;
+            font-weight: 700;
+            color: white;
+            transition: width 1.2s ease;
+            width: 0;
+        }
+        .pain-bar-fill.animated { /* width set via JS */ }
+
+        @media (max-width: 768px) {
+            .pain-bar-item { flex-direction: column; align-items: flex-start; }
+            .pain-bar-label { text-align: left; width: auto; }
+        }
+
+        /* ===== DEMAND WIDGET ===== */
+        .demand-insight {
+            background: linear-gradient(135deg, #EFF6FF, #F0FDF4);
+            border: 1px solid #BFDBFE;
+            border-radius: var(--radius);
+            padding: 28px;
+            text-align: center;
+        }
+        .demand-big {
+            font-family: 'Inter', sans-serif;
+            font-size: 3.2rem;
+            font-weight: 800;
+            background: linear-gradient(135deg, var(--primary), var(--success));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 8px;
+        }
+        .demand-text {
+            font-size: 1rem;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* ===== FEATURE REQUEST LIST ===== */
+        .feature-list {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;          
+        }
+        .feature-item {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 12px 16px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            font-size: 0.9rem;
+            font-weight: 500;
+            
+        }
+        .feature-pct {
+            font-family: 'Inter', sans-serif;
+            font-weight: 700;
+            color: var(--primary);
+            min-width: 44px;
+        }
+
+        /* ===== REASON / GOALS ===== */
+        .reason-item {
+            display: flex;
+            gap: 10px;
+            align-items: flex-start;
+            margin-bottom: 12px;
+            font-size: 21px;
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+        .reason-icon {
+            flex-shrink: 0;
+            margin-top: 2px;
+            font-size: 1rem;
+        }
+        .reason-icon.bad { color: var(--danger); }
+        .reason-icon.good { color: var(--success); }
+
+        /* ===== ACTOR CARDS ===== */
+        .actor-list {
+            list-style: none;
+            font-size: 0.88rem;
+            color: var(--text-secondary);
+        }
+        .actor-list li {
+            padding: 6px 0;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .actor-list li::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        /* ===== TIMELINE ===== */
+        .timeline {
+            position: relative;
+            padding-left: 28px;
+            border-left: 2px solid var(--border);
+            font-size: 25px;
+        }
+        .timeline-step {
+            margin-bottom: 24px;
+            position: relative;
+        }
+        .timeline-step::before {
+            content: '';
+            position: absolute;
+            left: -33px;
+            top: 4px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 3px solid var(--primary-soft);
+        }
+        .timeline-step-title {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.92rem;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .timeline-step-desc {
+            font-size: 21px;
+            color: var(--text-secondary);
+        }
+
+        /* ===== DB TABLE ===== */
+        .db-entity {
+            background: #F8FAFC;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            padding: 16px;
+            margin-bottom: 12px;
+            border-left: 4px solid var(--primary);
+        }
+        .db-entity h4 {
+            font-family: 'Inter', sans-serif;
+            font-weight: 600;
+            font-size: 0.92rem;
+            margin-bottom: 6px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .db-entity h4 i { color: var(--primary); }
+        .db-entity p {
+            font-size: 0.82rem;
+            color: var(--text-secondary);
+            font-family: 'JetBrains Mono', monospace, 'Inter';
+        }
+        .db-entity.accent { border-left-color: var(--accent); }
+        .db-entity.accent h4 i { color: var(--accent); }
+        .db-entity.purple { border-left-color: var(--purple); }
+        .db-entity.purple h4 i { color: var(--purple); }
+        .db-entity.green { border-left-color: var(--success); }
+        .db-entity.green h4 i { color: var(--success); }
+
+        /* ===== TECH ICONS ===== */
+        .tech-grid {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 24px;
+            justify-content: center;
+        }
+        .tech-badge {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+            padding: 20px 24px;
+            background: white;
+            border: 1px solid var(--border);
+            border-radius: var(--radius-sm);
+            transition: all 0.2s;
+            min-width: 100px;
+        }
+        .tech-badge:hover {
+            border-color: var(--primary-light);
+            box-shadow: var(--shadow-md);
+            transform: translateY(-3px);
+        }
+        .tech-badge i { font-size: 2.2rem; }
+        .tech-badge span { font-size: 0.82rem; font-weight: 500; color: var(--text-secondary); }
+
+        /* ===== DEMO ===== */
+        .demo-frame {
+            width: 100%;
+            height: 420px;
+            background: #F1F5F9;
+            border-radius: var(--radius);
+            border: 2px dashed var(--border);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s;
+            position: relative;
+        }
+        .demo-frame:hover {
+            border-color: var(--primary-light);
+            background: var(--primary-soft);
+        }
+        .play-circle {
+            width: 72px;
+            height: 72px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.6rem;
+            box-shadow: 0 0 0 0 rgba(37,99,235,0.4);
+            animation: pulse-play 2s infinite;
+        }
+        @keyframes pulse-play {
+            0%, 100% { box-shadow: 0 0 0 0 rgba(37,99,235,0.4); }
+            50% { box-shadow: 0 0 0 16px rgba(37,99,235,0); }
+        }
+
+        /* ===== PRICE TABLE ===== */
+        .price-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 0.85rem;
+            
+        }
+        .price-table th {
+            background: var(--primary-soft);
+            color: var(--primary);
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 24px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            
+        }
+        .price-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid whitesmoke;
+            border: 2px solid rgb(191, 191, 191);
+            color: var(--text-secondary);
+            font-size: 23px;
+        }
+        .price-table tr:hover td { background: #F8FAFC; }
+
+        /* ===== FOOTER ===== */
+        footer {
+            text-align: center;
+            padding: 40px;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+            border-top: 1px solid var(--border);
+            margin-top: 0;
+        }
+
+        /* ===== COMPARISON TABLE ===== */
+        .compare-table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 21px;
+        }
+        .compare-table th {
+            background: #F8FAFC;
+            padding: 10px 14px;
+            text-align: left;
+            font-weight: 600;
+            font-size: 21px;
+            color: var(--text-secondary);
+            border-bottom: 2px solid var(--border);
+        }
+        .compare-table td {
+            padding: 10px 14px;
+            border-bottom: 1px solid var(--border);
+            color: var(--text-secondary);
+        }
+        .compare-table tr:last-child {
+            background: var(--primary-soft);
+        }
+        .compare-table tr:last-child td {
+            color: var(--primary);
+            font-weight: 600;
+        }
+
+        /* ===== SECTION DIVIDER ===== */
+        .divider-section {
+            min-height: auto;
+            padding: 60px 8%;
+            background: linear-gradient(135deg, var(--bg-dark) 0%, #334155 100%);
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .divider-section .section-title {
+            color: white;
+        }
+        .divider-section .section-title span {
+            background: linear-gradient(135deg, #60A5FA, #A78BFA);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        .divider-section .section-desc {
+            color: #94A3B8;
+        }
+
+        /* ===== ANIMATED COUNTERS ===== */
+        .counter { display: inline-block; }
+        .box-fields {
+            font-size: 14px;
+            display: flex;
+            flex-wrap: wrap; /* Tự động xuống hàng cả cụm nếu màn hình quá nhỏ */
+            gap: 8px;        /* Khoảng cách đều giữa các chữ */
+            font-family: monospace; /* Font dạng mã code nhìn sẽ đẹp hơn */
+        }
+        .field-item {
+            background-color: #f1f3f5;
+            padding: 4px 8px;
+            border-radius: 4px;
+            color: #343a40;
+        }
+    </style>
+</head>
+<body>
+
+<!-- Side Navigation Dots -->
+<nav class="side-nav" id="sideNav">
+    <a href="#hero" title="Giới thiệu"></a>
+    <a href="#outline" title="Outline"></a>
+    <a href="#survey" title="Khảo sát"></a>
+    <a href="#diagnostic" title="Vấn đề"></a>
+    <a href="#reason" title="Lý do & Mục tiêu"></a>
+    <a href="#analysis" title="Phân tích"></a>
+    <a href="#usecase" title="Chức năng"></a>
+    <a href="#design" title="Thiết kế"></a>
+    <a href="#solution" title="Giải pháp"></a>
+    <a href="#demo" title="Trình chiếu"></a>
+    <a href="#conclusion" title="Kết luận"></a>
+</nav>
+
+<!-- ==================== 1. HERO ==================== -->
+<section class="slide" id="hero">
+    <div class="hero-badge"><i class="fas fa-graduation-cap"></i> Kỹ Nghệ Phần Mềm 2025 – 2026</div>
+    <h1 class="hero-title">
+        Hệ Thống Hỗ Trợ Và<br>
+        <span class="highlight">Tìm Kiếm Trọ Cho Sinh Viên <br> Tại Huế</span>
+    </h1>
+    <p class="hero-sub">Nền tảng kết nối sinh viên và chủ nhà trọ minh bạch, nhanh chóng và an toàn tại khu vực Huế.</p>
+
+    <div class="hero-info-grid">
+        <div class="hero-info-item">
+            <label>Giảng viên hướng dẫn</label>
+            <p>PGS.TS. Lê Văn Hoà</p>
+        </div>
+        <div class="hero-info-item">
+            <label>Nhóm thực hiện</label>
+            <p>Nhóm: 11 <br> Lớp: KNPM Nhóm 4</p>
+        </div>
+        <div class="hero-info-item">
+            <label>Đơn vị</label>
+            <p>Khoa CNTT – ĐH <br> Khoa học Huế</p>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== 2. OUTLINE ==================== -->
+<section class="slide" id="outline">
+    <span class="section-label" style="position: relative; z-index: 1;"><i class="fas fa-list-ol"></i> Nội dung</span>
+    <h2 class="section-title" style="position: relative; z-index: 1;">Nội Dung <span>Trình Bày</span></h2>
+    <p class="section-desc" style="position: relative; z-index: 1;">Các nội dung chính sẽ được nhóm trình bày trong buổi hôm nay.</p>
+
+    <div class="outline-grid">
+        <div class="outline-item"><div class="outline-num">1</div><span>Lý do chọn đề tài & Khảo sát thị trường</span></div>
+        <div class="outline-item"><div class="outline-num">2</div><span>Mục tiêu hệ thống</span></div>
+        <div class="outline-item"><div class="outline-num">3</div><span>Phân tích yêu cầu <br> (Tác nhân & Biểu đồ)</span></div>
+        <div class="outline-item"><div class="outline-num">4</div><span>Chức năng trọng tâm chi tiết</span></div>
+        <div class="outline-item"><div class="outline-num">5</div><span>Thiết kế hệ thống & CSDL</span></div>
+        <div class="outline-item"><div class="outline-num">6</div><span>Giải pháp công nghệ</span></div>
+        <div class="outline-item"><div class="outline-num">7</div><span>Trình chiếu giao diện</span></div>
+        <div class="outline-item"><div class="outline-num">8</div><span>Kết luận & <br> Hướng phát triển</span></div>
+    </div>
+</section>
+
+<!-- ==================== 3. DESCRIPTIVE ANALYTICS ==================== -->
+<div class="divider-section">
+    <span class="section-label" style="background: rgba(255,255,255,0.1); color: #93C5FD;"><i class="fas fa-chart-bar"></i> Phần A</span>
+    <h2 class="section-title" style="font-size: 2.2rem;">Phân Tích Mô Tả<br><span>Thực trạng thị trường trọ tại Huế</span></h2>
+    <p class="section-desc" style="text-align: center;">"Chuyện gì đang xảy ra?" – Dữ liệu khảo sát 200 sinh viên & <br> 50 chủ trọ tại Huế.</p>
+</div>
+
+<section class="slide" id="survey">
+    <span class="section-label"><i class="fas fa-chart-pie"></i> Khảo sát</span>
+    <h2 class="section-title">Tổng Quan <span>Quy Mô</span></h2>
+    <p class="section-desc">Số liệu thực tế về sinh viên và ký túc xá tại Đại học Huế.</p>
+
+    <!-- Big Numbers -->
+    <div class="grid-4" style="margin-bottom: 32px;">
+        <div class="stat-card blue">
+            <div class="stat-icon"><i class="fas fa-user-graduate"></i></div>
+            <div class="stat-number"><span class="counter" data-target="60000">0</span></div>
+            <div class="stat-label">Sinh viên chính quy</div>
+        </div>
+        <div class="stat-card amber">
+            <div class="stat-icon"><i class="fas fa-building"></i></div>
+            <div class="stat-number"><span class="counter" data-target="4000">0</span></div>
+            <div class="stat-label">Chỗ ở KTX (670 phòng)</div>
+        </div>
+        <div class="stat-card red">
+            <div class="stat-icon"><i class="fas fa-percentage"></i></div>
+            <div class="stat-number">6,7%</div>
+            <div class="stat-label">Tỷ lệ đáp ứng KTX</div>
+        </div>
+        <div class="stat-card green">
+            <div class="stat-icon"><i class="fas fa-search-location"></i></div>
+            <div class="stat-number">~<span class="counter" data-target="56000">0</span></div>
+            <div class="stat-label">Sinh viên cần tìm trọ ngoài</div>
+        </div>
+    </div>
+
+    <!-- Charts row -->
+    <div class="grid-2">
+        <div class="chart-container">
+            <div class="chart-title"><i class="fas fa-map-marker-alt" style="color: var(--primary); margin-right: 6px;"></i>Phân bổ sinh viên theo khu vực</div>
+            <div class="chart-wrapper" style="max-height: 320px; display: flex; justify-content: center;">
+                <canvas id="pieChart"></canvas>
+            </div>
+        </div>
+        <div class="chart-container">
+            <div class="chart-title"><i class="fas fa-dollar-sign" style="color: var(--accent); margin-right: 6px;"></i>Mức giá mong muốn (% sinh viên)</div>
+            <div class="chart-wrapper" style="max-height: 320px;">
+                <canvas id="priceChart"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Price overview table -->
+    <div class="card" style="margin-top: 24px;">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--accent-soft); color: var(--accent);"><i class="fas fa-tags"></i></div>
+            <div class="card-title">Bảng giá phòng trọ sinh viên tại Huế (2024-2025)</div>
+        </div>
+        <table class="price-table">
+            <thead>
+                <tr>
+                    <th>Loại phòng</th>
+                    <th>Diện tích</th>
+                    <th>Giá / tháng</th>
+                    <th>Tiện nghi</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr><td>Bình dân</td><td>12-15 m²</td><td>800K – 1,2 triệu</td><td>WC chung/riêng, quạt</td></tr>
+                <tr><td>Khép kín tiêu chuẩn</td><td>15-20 m²</td><td>1,2 – 1,8 triệu</td><td>WC riêng, nóng lạnh, wifi</td></tr>
+                <tr><td>Phòng trọ cao cấp</td><td>20-30 m²</td><td>2 – 3 triệu</td><td>Nội thất, điều hòa, bếp riêng</td></tr>
+                <tr><td>Cao cấp (nội thất đầy đủ)</td><td>25-35 m²</td><td>2,5 – 4,5 triệu</td><td>Điều hòa, tủ lạnh, ban công, camera</td></tr>
+                <tr><td>Ở ghép</td><td>—</td><td>600K – 1 triệu / người</td><td>Chia phòng 2-3 người</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ==================== 4. DIAGNOSTIC ANALYTICS ==================== -->
+<div class="divider-section">
+    <span class="section-label" style="background: rgba(255,255,255,0.1); color: #FCA5A5;"><i class="fas fa-stethoscope"></i> Phần B</span>
+    <h2 class="section-title" style="font-size: 2.2rem;">Phân Tích Chẩn Đoán<br><span>Tại sao cần hệ thống của chúng tôi?</span></h2>
+    <p class="section-desc" style="text-align: center;">Phân tích "khó khăn" – Đây là lý do dự án này tồn tại.</p>
+</div>
+
+<section class="slide" id="diagnostic">
+    <span class="section-label" style="background: var(--danger-soft); color: var(--danger);"><i class="fas fa-exclamation-triangle"></i> Vấn đề</span>
+    <h2 class="section-title">Khó Khăn Của <span>Sinh Viên</span></h2>
+    <p class="section-desc" style="font-size: 24px;">Kết quả khảo sát 200 sinh viên tại Đại học Huế – Khó khăn khi tìm phòng trọ.</p>
+
+    <!-- Pain Point Bars -->
+    <div class="card" style="margin-bottom: 24px; padding: 36px;">
+        <div class="chart-title" style="margin-bottom: 24px;"><i class="fas fa-chart-bar" style="color: var(--danger); margin-right: 6px;"></i>Xếp hạng khó khăn khi tìm trọ (% sinh viên gặp phải)</div>
+        <div class="pain-bar-list" id="painBars">
+            <div class="pain-bar-item">
+                <div class="pain-bar-label">Thông tin không chính xác</div>
+                <div class="pain-bar-track"><div class="pain-bar-fill" data-width="72" style="background: linear-gradient(90deg, #EF4444, #F87171);">72%</div></div>
+            </div>
+            <div class="pain-bar-item">
+                <div class="pain-bar-label">Tốn thời gian đi xem thực tế</div>
+                <div class="pain-bar-track"><div class="pain-bar-fill" data-width="68" style="background: linear-gradient(90deg, #F97316, #FB923C);">68%</div></div>
+            </div>
+            <div class="pain-bar-item">
+                <div class="pain-bar-label">Khó so sánh giữa các phòng</div>
+                <div class="pain-bar-track"><div class="pain-bar-fill" data-width="64" style="background: linear-gradient(90deg, #F59E0B, #FBBF24);">64%</div></div>
+            </div>
+            <div class="pain-bar-item">
+                <div class="pain-bar-label">Không có đánh giá từ sinh viên trước</div>
+                <div class="pain-bar-track"><div class="pain-bar-fill" data-width="56" style="background: linear-gradient(90deg, #8B5CF6, #A78BFA);">56%</div></div>
+            </div>
+            <div class="pain-bar-item">
+                <div class="pain-bar-label">Không biết khoảng cách đến trường</div>
+                <div class="pain-bar-track"><div class="pain-bar-fill" data-width="52" style="background: linear-gradient(90deg, #3B82F6, #60A5FA);">52%</div></div>
+            </div>
+            <div class="pain-bar-item">
+                <div class="pain-bar-label">Lo ngại lừa đảo đặt cọc</div>
+                <div class="pain-bar-track"><div class="pain-bar-fill" data-width="48" style="background: linear-gradient(90deg, #EC4899, #F472B6);">48%</div></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <!-- Fraud Alert -->
+        <div class="alert-widget">
+            <div class="alert-icon-wrap"><i class="fas fa-shield-exclamation"></i><i class="fas fa-exclamation-triangle"></i></div>
+            <div>
+                <div class="alert-title">Cảnh báo: Lừa đảo đặt cọc phòng trọ</div>
+                <p class="alert-text" style="font-size: 23px;">
+                    Theo HueTV & Báo Đà Nẵng, nhiều tân sinh viên tại Huế đã bị lừa đảo 
+                    qua các nhóm Facebook giả.<br>Đối tượng yêu cầu chuyển tiền cọc 500K – 1 triệu rồi 
+                    chặn liên lạc. <br> <strong>48% sinh viên lo ngại vấn đề này.</strong>
+                </p>
+                <span class="alert-tag" style="font-size: 21px;">Nhận định quan trọng: Cần tính năng <br><strong> Xác minh Chủ trọ</strong></span>
+            </div>
+        </div>
+
+        <!-- Demand Widget -->
+        <div style="display: flex; flex-direction: column; gap: 16px;">
+            <div class="demand-insight">
+                <div class="demand-big">82%</div>
+                <div class="demand-text">sinh viên muốn có hệ thống<br>tìm trọ chuyên biệt tại Huế</div>
+            </div>
+            <div class="demand-insight" style="background: linear-gradient(135deg, #FFF7ED, #FEF3C7); border-color: #FDE68A;">
+                <div class="demand-big" style="background: linear-gradient(135deg, var(--accent), #D97706); -webkit-background-clip: text;">80%</div>
+                <div class="demand-text">chủ trọ sẵn sàng sử dụng<br>hệ thống đăng tin cho thuê</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Search method & Feature request -->
+    <div class="grid-2" style="margin-top: 24px;">
+        <div class="chart-container">
+            <div class="chart-title"><i class="fas fa-search" style="color: var(--purple); margin-right: 6px;"></i>Phương thức tìm trọ hiện tại</div>
+            <div class="chart-wrapper" style="max-height: 300px;">
+                <canvas id="searchMethodChart"></canvas>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--success-soft); color: var(--success);"><i class="fas fa-star"></i></div>
+                <div class="card-title">Tính năng sinh viên mong muốn nhất</div>
+            </div>
+            <div class="feature-list">
+                <div class="feature-item"><span class="feature-pct">84%</span>Tìm kiếm theo khu vực / khoảng cách đến trường</div>
+                <div class="feature-item"><span class="feature-pct">80%</span>Lọc theo giá, diện tích, tiện nghi</div>
+                <div class="feature-item"><span class="feature-pct">78%</span>Xem hình ảnh thực tế của phòng</div>
+                <div class="feature-item"><span class="feature-pct">74%</span>Đánh giá từ sinh viên đã thuê</div>
+                <div class="feature-item"><span class="feature-pct">68%</span>Bản đồ vị trí phòng trọ</div>
+                <div class="feature-item"><span class="feature-pct">66%</span>Xác minh thông tin chủ trọ</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Comparison table -->
+    <div class="card" style="margin-top: 24px;">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--purple-soft); color: var(--purple);"><i class="fas fa-balance-scale"></i></div>
+            <div class="card-title">So sánh với các nền tảng hiện có</div>
+        </div>
+        <table class="compare-table">
+            <thead><tr><th>Nền tảng</th><th>Ưu điểm</th><th>Nhược điểm</th></tr></thead>
+            <tbody>
+                <tr><td>Nhóm mạng xã hội</td><td>Phổ biến, dễ tiếp cận</td><td>Không kiểm duyệt, lừa đảo</td></tr>
+                <tr><td>Phongtro123.com</td><td>Chuyên cho thuê, toàn quốc</td><td>Không chuyên biệt sinh viên Huế</td></tr>
+                <tr><td>Tromoi.com</td><td>Có đánh giá, rõ ràng</td><td>Ít tin đăng tại Huế</td></tr>
+                <tr><td><strong>Hệ thống của chúng tôi</strong></td><td><strong>Chuyên biệt sinh viên Huế, xác minh, <br> bản đồ, lọc thông minh</strong></td><td>Cần xây dựng CSDL ban đầu</td></tr>
+            </tbody>
+        </table>
+    </div>
+</section>
+
+<!-- ==================== 5. LÝ DO & MỤC TIÊU ==================== -->
+<section class="slide" id="reason">
+    <span class="section-label"><i class="fas fa-lightbulb"></i> Động lực</span>
+    <h2 class="section-title">Lý Do & <span>Mục Tiêu</span></h2>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--danger-soft); color: var(--danger);"><i class="fas fa-times-circle"></i></div>
+                <div class="card-title">Tại sao chọn đề tài này?</div>
+            </div>
+            <div class="reason-item"><span class="reason-icon bad"><i class="fas fa-times"></i></span>Thông tin rải rác, thiếu hệ thống (Nhóm mạng xã hội, tờ rơi).</div>
+            <div class="reason-item"><span class="reason-icon bad"><i class="fas fa-times"></i></span>Không kiểm chứng độ chính xác – 72% sinh viên gặp thông tin sai.</div>
+            <div class="reason-item"><span class="reason-icon bad"><i class="fas fa-times"></i></span>48% lo ngại lừa đảo khi đặt cọc online.</div>
+            <div class="reason-item"><span class="reason-icon bad"><i class="fas fa-times"></i></span>Chủ trọ khó tiếp cận đúng tệp sinh viên (60%).</div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-arrow-right"></i></span><strong>Cần một nền tảng tập trung, minh bạch và đáng tin cậy.</strong></div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--success-soft); color: var(--success);"><i class="fas fa-bullseye"></i></div>
+                <div class="card-title">Mục tiêu cốt lõi</div>
+            </div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-check"></i></span>Tự động hóa & tối ưu tìm kiếm phòng trọ.</div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-check"></i></span>Kết nối trực tiếp sinh viên – Chủ trọ (Nhắn tin thời gian thực).</div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-check"></i></span>Xác minh chủ trọ – Bảo vệ sinh viên khỏi lừa đảo.</div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-check"></i></span>Quản lý dễ dàng, cập nhật trạng thái phòng chính xác.</div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-check"></i></span>Xây dựng nguồn dữ liệu tập trung, lâu dài tại Huế.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== 6. PHÂN TÍCH YÊU CẦU ==================== -->
+<section class="slide" id="analysis">
+    <span class="section-label"><i class="fas fa-cogs"></i> Phân tích</span>
+    <h2 class="section-title">Phân Tích <span>Yêu Cầu</span></h2>
+    <p class="section-desc">Hệ thống gồm 4 tác nhân chính: Người dùng (tổng quát), Sinh viên, Chủ trọ và Quản trị viên.</p>
+
+    <div class="grid-4">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--success-soft); color: var(--success);"><i class="fas fa-user"></i></div>
+                <div class="card-title">Người Dùng</div>
+            </div>
+            <ul class="actor-list">
+                <li>Đăng ký tài khoản</li>
+                <li>Đăng nhập / Đăng xuất</li>
+                <li>Quên mật khẩu</li>
+                <li>Quản lý thông tin cá nhân</li>
+            </ul>
+            <style>.actor-list li::before { background: var(--primary); }</style>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);"><i class="fas fa-user-graduate"></i></div>
+                <div class="card-title">Sinh Viên</div>
+            </div>
+            <ul class="actor-list">
+                <li>Tìm kiếm & Lọc phòng trọ</li>
+                <li>Xem chi tiết phòng trọ</li>
+                <li>Nhắn tin liên hệ chủ trọ</li>
+                <li>Báo cáo tin đăng vi phạm</li>
+            </ul>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--accent-soft); color: var(--accent);"><i class="fas fa-home"></i></div>
+                <div class="card-title">Chủ Trọ</div>
+            </div>
+            <ul class="actor-list">
+                <li>Gửi yêu cầu xác minh</li>
+                <li>Quản lý phòng trọ</li>
+                <li>Quản lý bài đăng</li>
+                <li>Nhắn tin phản hồi sinh viên</li>
+                <li>Cập nhật trạng thái phòng</li>
+            </ul>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--purple-soft); color: var(--purple);"><i class="fas fa-user-shield"></i></div>
+                <div class="card-title">Quản Trị Viên</div>
+            </div>
+            <ul class="actor-list">
+                <li>Kiểm duyệt bài đăng</li>
+                <li>Xác minh tài khoản chủ trọ</li>
+                <li>Quản lý tài khoản người dùng</li>
+                <li>Xử lý báo cáo vi phạm</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- Mô hình Use Case tổng quát -->
+    <div class="card" style="margin-top: 28px;">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);"><i class="fas fa-project-diagram"></i></div>
+            <div class="card-title">Mô Hình Biểu Đồ Ca Sử Dụng – 17 Ca Sử Dụng (6 Gói)</div>
+        </div>
+        <div class="grid-3" style="margin-top: 12px;">
+            <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 4px solid var(--primary);">
+                <h4 style="font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; color: var(--primary);">Gói 1: Xác thực</h4>
+                <ul style="font-size: 0.82rem; color: var(--text-secondary); list-style: none;">
+                    <li>UC01: Đăng nhập</li>
+                    <li>UC02: Đăng xuất</li>
+                    <li>UC03: Đăng ký</li>
+                    <li>UC04: Quên mật khẩu</li>
+                </ul>
+            </div>
+            <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 4px solid var(--success);">
+                <h4 style="font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; color: var(--success);">Gói 2: Sinh viên</h4>
+                <ul style="font-size: 0.82rem; color: var(--text-secondary); list-style: none;">
+                    <li>UC05: Tìm kiếm phòng trọ</li>
+                    <li>UC11: Xem chi tiết phòng trọ</li>
+                    <li>UC12: Nhắn tin liên hệ chủ trọ</li>
+                    <li>UC17: Báo cáo tin đăng vi phạm</li>
+                </ul>
+            </div>
+            <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 4px solid var(--accent);">
+                <h4 style="font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; color: var(--accent);">Gói 3: Quản lý thông tin cá nhân</h4>
+                <ul style="font-size: 0.82rem; color: var(--text-secondary); list-style: none;">
+                    <li>UC06.1: Xem thông tin cá nhân</li>
+                    <li>UC06.2: Cập nhật thông tin cá nhân</li>
+                    <li>UC06.3: Thay đổi mật khẩu</li>
+                </ul>
+            </div>
+            <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 4px solid #EC4899;">
+                <h4 style="font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; color: #EC4899;">Gói 4: Quản lý bài đăng (Chủ trọ)</h4>
+                <ul style="font-size: 0.82rem; color: var(--text-secondary); list-style: none;">
+                    <li>UC07: Nhắn tin liên hệ sinh viên</li>
+                    <li>UC08.1: Tạo bài đăng</li>
+                    <li>UC08.2: Xóa bài đăng</li>
+                    <li>UC08.3: Chỉnh sửa bài đăng</li>
+                    <li>UC08.4: Ẩn bài đăng</li>
+                </ul>
+            </div>
+            <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 4px solid var(--purple);">
+                <h4 style="font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; color: var(--purple);">Gói 5: Quản lý phòng trọ (Chủ trọ)</h4>
+                <ul style="font-size: 0.82rem; color: var(--text-secondary); list-style: none;">
+                    <li>UC09.1: Thêm mới phòng trọ</li>
+                    <li>UC09.2: Chỉnh sửa thông tin</li>
+                    <li>UC09.3: Xóa phòng trọ</li>
+                    <li>UC09.4: Cập nhật trạng thái</li>
+                    <li>UC10: Gửi yêu cầu xác minh</li>
+                </ul>
+            </div>
+            <div style="background: #F8FAFC; border: 1px solid var(--border); border-radius: 10px; padding: 16px; border-left: 4px solid var(--danger);">
+                <h4 style="font-size: 0.88rem; font-weight: 600; margin-bottom: 8px; color: var(--danger);">Gói 6: Quản trị viên</h4>
+                <ul style="font-size: 0.82rem; color: var(--text-secondary); list-style: none;">
+                    <li>UC13: Xử lý báo cáo vi phạm</li>
+                    <li>UC14.1: Xem danh sách bài đăng</li>
+                    <li>UC14.2: Kiểm duyệt bài đăng</li>
+                    <li>UC14.3: Tìm kiếm bài đăng</li>
+                    <li>UC15: Xác minh tài khoản chủ trọ</li>
+                    <li>UC16: Quản lý tài khoản người dùng</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== 7. USE CASE TRỌNG TÂM ==================== -->
+<section class="slide" id="usecase">
+    <span class="section-label"><i class="fas fa-search"></i> Chi tiết</span>
+    <h2 class="section-title">Chức Năng <span>Trọng Tâm</span></h2>
+    <p class="section-desc">Luồng hoạt động của các chức năng cốt lõi trong hệ thống.</p>
+
+    <div class="card" style="margin-bottom: 24px;">
+        <div class="card-header">
+            <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);"><i class="fas fa-search-location"></i></div>
+            <div class="card-title">1. Tìm Kiếm Phòng Trọ</div>
+        </div>
+        <div class="timeline">
+            <div class="timeline-step">
+                <div class="timeline-step-title">Bước 1: Nhập liệu</div>
+                <div class="timeline-step-desc">Sinh viên nhập từ khóa (đường, khu vực, trường ĐH) hoặc không nhập để xem tất cả.</div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-step-title">Bước 2: Lọc Nâng Cao</div>
+                <div class="timeline-step-desc">Chọn giá, diện tích, tiện ích (wifi, điều hòa, không chung chủ...).</div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-step-title">Bước 3: Hiển thị kết quả</div>
+                <div class="timeline-step-desc">Hệ thống trả về danh sách phòng phù hợp kèm bản đồ vị trí.</div>
+            </div>
+            <div class="timeline-step">
+                <div class="timeline-step-title">Bước 4: Xem Chi Tiết & Liên hệ</div>
+                <div class="timeline-step-desc">Nhấp vào phòng → Xem ảnh, giá, bản đồ, mô tả → Nhắn tin chủ trọ.</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--success-soft); color: var(--success);"><i class="fas fa-shield-alt"></i></div>
+                <div class="card-title">2. Xác Minh Hồ Sơ Chủ Trọ</div>
+            </div>
+            <div class="timeline">
+                <div class="timeline-step"><div class="timeline-step-title">Tải lên CCCD / Giấy tờ</div><div class="timeline-step-desc">Chủ trọ gửi giấy tờ xác minh.</div></div>
+                <div class="timeline-step"><div class="timeline-step-title">Chờ xác minh</div><div class="timeline-step-desc">Hệ thống chuyển trạng thái, Quản trị viên kiểm duyệt.</div></div>
+                <div class="timeline-step"><div class="timeline-step-title">Kết quả</div><div class="timeline-step-desc">Duyệt → Cấp quyền đầy đủ / Từ chối → Yêu cầu bổ sung.</div></div>
+            </div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: #FCE7F3; color: #EC4899;"><i class="fas fa-comments"></i></div>
+                <div class="card-title">3. Nhắn Tin Liên Hệ</div>
+            </div>
+            <div class="timeline">
+                <div class="timeline-step"><div class="timeline-step-title">Sinh viên quan tâm phòng</div><div class="timeline-step-desc">Nhấp nút nhắn tin trên trang chi tiết.</div></div>
+                <div class="timeline-step"><div class="timeline-step-title">Nhắn tin trực tiếp</div><div class="timeline-step-desc">Mở cửa sổ nhắn tin thời gian thực trên hệ thống.</div></div>
+                <div class="timeline-step"><div class="timeline-step-title">Trao đổi & Đặt lịch</div><div class="timeline-step-desc">Hỏi thông tin, đặt lịch xem phòng trực tiếp.</div></div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== 8. THIẾT KẾ & CSDL ==================== -->
+<section class="slide" id="design">
+    <span class="section-label"><i class="fas fa-drafting-compass"></i> Thiết kế</span>
+    <h2 class="section-title">Thiết Kế <span>Hệ Thống</span></h2>
+
+    <div class="grid-2">
+        <div>
+            <h3 style="font-family: 'Inter', sans-serif; font-weight: 600; margin-bottom: 16px; font-size: 21px;">Mô hình lớp & Đối tượng chính</h3>
+            <div class="db-entity">
+                <h4><i class="fas fa-user"></i> Người dùng</h4>
+                <p style="font-size: 16px;">id, hoTen, email, sdt, matKhau, loaiTaiKhoan, trangThai</p>
+            </div>
+            <div class="db-entity accent">
+                <h4><i class="fas fa-building"></i> Phòng trọ</h4>
+                <p style="font-size: 16px;">id, chuTro_id, diaChi, gia, dienTich, tinhTrang, tienIch, hinhAnh</p>
+            </div>
+            <div class="db-entity purple">
+                <h4><i class="fas fa-newspaper"></i> Bài đăng</h4>
+                <p style="font-size: 16px;">id, room_id, tieuDe, moTa, trangThaiKiemDuyet, ngayDang</p>
+            </div>
+            <div class="db-entity green">
+                <h4><i class="fas fa-comment-dots"></i> Tin nhắn</h4>
+                <p style="font-size: 16px;">id, nguoiGui_id, nguoiNhan_id, noiDung, thoiGian</p>
+            </div>
+            <div class="db-entity" style="border-left-color: #EC4899;">
+                <h4><i class="fas fa-id-card" style="color: #EC4899;"></i> Hồ sơ xác minh</h4>
+                <p style="font-size: 16px;">id, chuTro_id, loaiGiayTo, urlGiayTo, trangThai, ngayGui</p>
+            </div>
+            <div class="db-entity" style="border-left-color: var(--danger);">
+                <h4><i class="fas fa-flag" style="color: var(--danger);"></i> Báo cáo vi phạm</h4>
+                <p style="font-size: 16px;">id, nguoiBaoCao_id, baiDang_id, lyDo, trangThai, ngayTao</p>
+            </div>
+        </div>
+        <div>
+            <div class="card" style="margin-bottom: 16px;">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);"><i class="fas fa-database"></i></div>
+                    <div class="card-title">Cơ sở dữ liệu</div>
+                </div>
+                <p style="color: var(--text-secondary); font-size: 0.92rem; margin-bottom: 16px;">
+                    Hệ thống sử dụng <strong>Hệ quản trị CSDL quan hệ</strong> để đảm bảo tính toàn vẹn dữ liệu. Các bảng được chuẩn hóa để tránh dư thừa.
+                </p>
+                <h4 style="font-size: 0.9rem; font-weight: 600; margin-bottom: 10px; color: var(--text-main);">Quan hệ chính:</h4>
+                <ul style="list-style: none; font-size: 0.85rem; color: var(--text-secondary);">
+                    <li style="padding: 5px 0; display: flex; align-items: center; gap: 8px;"><i class="fas fa-link" style="color: var(--primary); font-size: 0.75rem;"></i> Người dùng (1) — (N) Phòng trọ</li>
+                    <li style="padding: 5px 0; display: flex; align-items: center; gap: 8px;"><i class="fas fa-link" style="color: var(--accent); font-size: 0.75rem;"></i> Phòng trọ (1) — (1) Bài đăng</li>
+                    <li style="padding: 5px 0; display: flex; align-items: center; gap: 8px;"><i class="fas fa-link" style="color: var(--purple); font-size: 0.75rem;"></i> Người dùng (1) — (N) Tin nhắn</li>
+                    <li style="padding: 5px 0; display: flex; align-items: center; gap: 8px;"><i class="fas fa-link" style="color: var(--success); font-size: 0.75rem;"></i> Người dùng (1) — (1) Hồ sơ xác minh</li>
+                    <li style="padding: 5px 0; display: flex; align-items: center; gap: 8px;"><i class="fas fa-link" style="color: var(--danger); font-size: 0.75rem;"></i> Người dùng (1) — (N) Báo cáo vi phạm</li>
+                </ul>
+            </div>
+            <div class="card">
+                <div class="card-header">
+                    <div class="card-icon" style="background: var(--accent-soft); color: var(--accent);"><i class="fas fa-clipboard-check"></i></div>
+                    <div class="card-title">Yêu cầu phi chức năng</div>
+                </div>
+                <ul style="list-style: none; font-size: 0.85rem; color: var(--text-secondary);">
+                    <li style="padding: 5px 0; display: flex; align-items: flex-start; gap: 8px;"><i class="fas fa-globe" style="color: var(--primary); font-size: 0.75rem; margin-top: 4px;"></i> Nền tảng Web, hỗ trợ đa trình duyệt, giao diện đáp ứng</li>
+                    <li style="padding: 5px 0; display: flex; align-items: flex-start; gap: 8px;"><i class="fas fa-tachometer-alt" style="color: var(--success); font-size: 0.75rem; margin-top: 4px;"></i> Thời gian phản hồi &le; 3 giây, hỗ trợ đa người dùng đồng thời</li>
+                    <li style="padding: 5px 0; display: flex; align-items: flex-start; gap: 8px;"><i class="fas fa-lock" style="color: var(--danger); font-size: 0.75rem; margin-top: 4px;"></i> Mã hóa mật khẩu, phân quyền rõ ràng, bảo vệ dữ liệu</li>
+                    <li style="padding: 5px 0; display: flex; align-items: flex-start; gap: 8px;"><i class="fas fa-expand-arrows-alt" style="color: var(--purple); font-size: 0.75rem; margin-top: 4px;"></i> Dễ mở rộng: thanh toán, bản đồ, thông báo, ứng dụng di động</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== 9. GIẢI PHÁP & CÔNG NGHỆ ==================== -->
+<section class="slide" id="solution">
+    <span class="section-label"><i class="fas fa-rocket"></i> Giải pháp</span>
+    <h2 class="section-title">Giải Pháp & <span>Công Nghệ</span></h2>
+
+    <div class="grid-3" style="margin-bottom: 40px;">
+        <div class="card" style="text-align: center;">
+            <div class="card-icon" style="background: var(--primary-soft); color: var(--primary); margin: 0 auto 14px; width: 52px; height: 52px;"><i class="fas fa-filter" style="font-size: 1.3rem;"></i></div>
+            <h4 style="margin-bottom: 8px;">Bộ lọc Thông minh</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">Tìm kiếm đa tiêu chí đồng thời theo giá, vị trí, tiện ích. Giảm thiểu thời gian quét phòng.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div class="card-icon" style="background: var(--accent-soft); color: var(--accent); margin: 0 auto 14px; width: 52px; height: 52px;"><i class="fas fa-shield-alt" style="font-size: 1.3rem;"></i></div>
+            <h4 style="margin-bottom: 8px;">Hệ thống Xác minh</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">Quy trình xác minh danh tính cơ bản cho chủ trọ, tạo môi trường an toàn cho sinh viên.</p>
+        </div>
+        <div class="card" style="text-align: center;">
+            <div class="card-icon" style="background: #FCE7F3; color: #EC4899; margin: 0 auto 14px; width: 52px; height: 52px;"><i class="fas fa-comments" style="font-size: 1.3rem;"></i></div>
+            <h4 style="margin-bottom: 8px;">Tương tác Trực tiếp</h4>
+            <p style="font-size: 0.85rem; color: var(--text-secondary);">Nhắn tin trực tuyến theo thời gian thực giúp phản hồi nhanh chóng, chốt phòng không chờ đợi.</p>
+        </div>
+    </div>
+
+    <h3 style="text-align: center; color: var(--text-secondary); margin-bottom: 20px; font-size: 0.95rem; font-weight: 500;">Công nghệ tham khảo & Sử dụng</h3>
+    <div class="tech-grid">
+        <div class="tech-badge"><i class="fab fa-react" style="color: #61DAFB;"></i><span>ReactJS</span></div>
+        <div class="tech-badge"><i class="fab fa-node-js" style="color: #68A063;"></i><span>NodeJS</span></div>
+        <div class="tech-badge"><i class="fas fa-database" style="color: #336791;"></i><span>PostgreSQL</span></div>
+        <div class="tech-badge"><i class="fab fa-figma" style="color: #F24E1E;"></i><span>Figma</span></div>
+    </div>
+</section>
+
+<!-- ==================== 10. DEMO ==================== -->
+<section class="slide" id="demo">
+    <span class="section-label"><i class="fas fa-desktop"></i> Trình chiếu</span>
+    <h2 class="section-title">Trình Chiếu <span>Giao Diện</span></h2>
+    <p class="section-desc">Nhấp để xem bản thiết kế giao diện / Chạy thử hệ thống.</p>
+
+    <div class="demo-frame" id="demoScreen">
+        <div class="play-circle"><i class="fas fa-play" style="margin-left: 4px;"></i></div>
+    </div>
+</section>
+
+<!-- ==================== 11. KẾT LUẬN ==================== -->
+<section class="slide" id="conclusion">
+    <span class="section-label"><i class="fas fa-flag-checkered"></i> Kết luận</span>
+    <h2 class="section-title">Kết Luận & <span>Hướng Phát Triển</span></h2>
+
+    <div class="grid-2">
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--success-soft); color: var(--success);"><i class="fas fa-trophy"></i></div>
+                <div class="card-title">Kết quả đạt được</div>
+            </div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-check"></i></span>Quy trình phân tích bài toán rõ ràng.</div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-check"></i></span>Xây dựng mô hình ca sử dụng chi tiết (17 UC).</div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-check"></i></span>Thiết kế hệ thống và CSDL tối ưu.</div>
+            <div class="reason-item"><span class="reason-icon good"><i class="fas fa-check"></i></span>Xây dựng bản mẫu giao diện thân thiện.</div>
+        </div>
+        <div class="card">
+            <div class="card-header">
+                <div class="card-icon" style="background: var(--primary-soft); color: var(--primary);"><i class="fas fa-rocket"></i></div>
+                <div class="card-title">Hướng phát triển</div>
+            </div>
+            <div class="reason-item"><span class="reason-icon" style="color: var(--primary);"><i class="fas fa-arrow-right"></i></span>Tiến hành lập trình và triển khai thực tế.</div>
+            <div class="reason-item"><span class="reason-icon" style="color: var(--primary);"><i class="fas fa-arrow-right"></i></span>Cải thiện hệ thống và trải nghiệm người dùng.</div>
+            <div class="reason-item"><span class="reason-icon" style="color: var(--primary);"><i class="fas fa-arrow-right"></i></span>Phát triển ứng dụng di động đa nền tảng.</div>
+            <div class="reason-item"><span class="reason-icon" style="color: var(--primary);"><i class="fas fa-arrow-right"></i></span>Mở rộng phạm vi phát triển ngoài thành phố Huế.</div>
+        </div>
+    </div>
+</section>
+
+<!-- ==================== 12. TÀI LIỆU THAM KHẢO ==================== -->
+<section class="slide" id="reference">
+    <span class="section-label"><i class="fas fa-book"></i> Tham khảo</span>
+    <h2 class="section-title">Tài Liệu <span>Tham Khảo</span></h2>
+
+    <div class="card" style="font-size: 21px;">
+        <ol style="color: var(--text-secondary); font-size: 0.9rem; padding-left: 1.5rem; line-height: 2.2;">
+            <li>Giáo trình Kỹ nghệ phần mềm – ĐH Khoa học Huế.</li>
+            <li>Tài liệu UML & Mô hình hóa hệ thống.</li>
+            <li>Đại học Huế – Số liệu thống kê (hueuni.edu.vn).</li>
+            <li>Trung tâm Phục vụ Sinh viên – KTX Đại học Huế (ssc.hueuni.edu.vn).</li>
+            <li>Báo Tiền Phong – "Hơn 13.300 tân sinh viên ĐH Huế" (10/2024).</li>
+            <li>HueTV – "Tân sinh viên dính bẫy lừa đảo đặt cọc tiền thuê trọ" (9/2022).</li>
+            <li>Báo Thừa Thiên Huế – "Nhà trọ phòng cao cấp, lựa chọn mới" (1/2026).</li>
+            <li>Tham khảo nền tảng cho thuê trọ: phongtro123.com, tromoi.com, batdongsan.com.vn.</li>
+            <li>Tài liệu tham khảo lập trình web (MDN, ReactJS, NodeJS).</li>
+        </ol>
+    </div>
+</section>
+
+<footer>
+    <p>&copy; 2026 Nhóm 11 – KNPM. Trường Đại học Khoa học, Đại học Huế.</p>
+</footer>
+
+<script>
+// ===== INTERSECTION OBSERVER =====
+const slides = document.querySelectorAll('.slide');
+const navDots = document.querySelectorAll('.side-nav a');
+
+const observerOptions = { threshold: 0.15, rootMargin: '0px 0px -40px 0px' };
+
+const slideObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.classList.add('visible');
+            // Update active dot
+            const id = entry.target.id;
+            navDots.forEach(d => d.classList.remove('active'));
+            const activeDot = document.querySelector(`.side-nav a[href="#${id}"]`);
+            if (activeDot) activeDot.classList.add('active');
+        }
+    });
+}, observerOptions);
+
+slides.forEach(s => slideObserver.observe(s));
+document.getElementById('hero').classList.add('visible');
+
+// ===== ANIMATED COUNTERS =====
+const counterObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            const counters = entry.target.querySelectorAll('.counter');
+            counters.forEach(c => {
+                const target = +c.getAttribute('data-target');
+                const duration = 1500;
+                const step = target / (duration / 16);
+                let current = 0;
+                const update = () => {
+                    current += step;
+                    if (current < target) {
+                        c.textContent = Math.floor(current).toLocaleString('vi-VN');
+                        requestAnimationFrame(update);
+                    } else {
+                        c.textContent = target.toLocaleString('vi-VN');
+                    }
+                };
+                update();
+            });
+            counterObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.3 });
+
+document.querySelectorAll('.grid-4').forEach(g => counterObserver.observe(g));
+
+// ===== PAIN BAR ANIMATION =====
+const painObserver = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+        if (entry.isIntersecting) {
+            entry.target.querySelectorAll('.pain-bar-fill').forEach(bar => {
+                const w = bar.getAttribute('data-width');
+                setTimeout(() => { bar.style.width = w + '%'; }, 200);
+            });
+            painObserver.unobserve(entry.target);
+        }
+    });
+}, { threshold: 0.3 });
+const painBarsEl = document.getElementById('painBars');
+if (painBarsEl) painObserver.observe(painBarsEl);
+
+// ===== CHARTS =====
+// Pie chart - Khu vực
+const pieCtx = document.getElementById('pieChart');
+if (pieCtx) {
+    new Chart(pieCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['An Cựu', 'Vĩ Dạ', 'Phú Nhuận', 'Xuân Phú', 'Trường An', 'Phú Hội', 'An Đông', 'Khác'],
+            datasets: [{
+                data: [28, 16, 14, 12, 10, 8, 6, 6],
+                backgroundColor: ['#3B82F6','#8B5CF6','#F59E0B','#10B981','#EC4899','#F97316','#6366F1','#CBD5E1'],
+                borderWidth: 0,
+                hoverOffset: 8
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: {
+                    position: 'right',
+                    labels: { padding: 12, font: { size: 12, family: 'Roboto' }, usePointStyle: true, pointStyleWidth: 10 }
+                }
+            },
+            cutout: '55%'
+        }
+    });
+}
+
+// Bar chart - Giá mong muốn
+const priceCtx = document.getElementById('priceChart');
+if (priceCtx) {
+    new Chart(priceCtx, {
+        type: 'bar',
+        data: {
+            labels: ['< 1 triệu', '1 – 1,5 tr', '1,5 – 2 tr', '2 – 3 tr', '> 3 triệu'],
+            datasets: [{
+                label: '% sinh viên',
+                data: [18, 36, 28, 14, 4],
+                backgroundColor: ['#DBEAFE','#3B82F6','#2563EB','#1D4ED8','#1E3A8A'],
+                borderRadius: 8,
+                borderSkipped: false,
+                barThickness: 40
+            }]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: (c) => c.raw + '%' } }
+            },
+            scales: {
+                y: {
+                    beginAtZero: true,
+                    max: 45,
+                    ticks: { callback: v => v + '%', font: { size: 11 } },
+                    grid: { color: '#F1F5F9' }
+                },
+                x: {
+                    ticks: { font: { size: 11 } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// Horizontal bar - Search methods
+const searchCtx = document.getElementById('searchMethodChart');
+if (searchCtx) {
+    new Chart(searchCtx, {
+        type: 'bar',
+        data: {
+            labels: ['Mạng xã hội', 'Bạn bè/Người quen', 'Đi khảo sát trực tiếp', 'Trang cho thuê trọ', 'Tờ rơi/Bảng tin', 'Ứng dụng điện thoại'],
+            datasets: [{
+                label: '% sinh viên sử dụng',
+                data: [76, 60, 44, 28, 12, 6],
+                backgroundColor: ['#8B5CF6','#A78BFA','#C4B5FD','#DDD6FE','#EDE9FE','#F5F3FF'],
+                borderRadius: 6,
+                borderSkipped: false,
+                barThickness: 22
+            }]
+        },
+        options: {
+            indexAxis: 'y',
+            responsive: true,
+            maintainAspectRatio: true,
+            plugins: {
+                legend: { display: false },
+                tooltip: { callbacks: { label: (c) => c.raw + '%' } }
+            },
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    max: 90,
+                    ticks: { callback: v => v + '%', font: { size: 11 } },
+                    grid: { color: '#F1F5F9' }
+                },
+                y: {
+                    ticks: { font: { size: 11 } },
+                    grid: { display: false }
+                }
+            }
+        }
+    });
+}
+
+// ===== DEMO INTERACTION =====
+const demoScreen = document.getElementById('demoScreen');
+demoScreen.addEventListener('click', () => {
+    window.open('https://knpm-n11.vercel.app/', '_blank');
+});
+</script>
+</body>
+</html>
