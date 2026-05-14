@@ -876,6 +876,52 @@
             border-radius: 4px;
             color: #343a40;
         }
+        /* Tối ưu bảng cho điện thoại */
+.table-responsive {
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+    margin: 20px 0;
+    border-radius: var(--radius-sm);
+    box-shadow: var(--shadow);
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    min-width: 600px; /* Đảm bảo bảng không bị quá hẹp trên mobile */
+}
+
+table th {
+    background: var(--primary);
+    color: white;
+    font-weight: 600;
+    text-align: left;
+    padding: 12px 15px;
+    font-size: 0.9rem;
+}
+
+table td {
+    padding: 12px 15px;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.9rem;
+    color: var(--text-main);
+}
+
+table tr:last-child td { border-bottom: none; }
+table tr:nth-child(even) { background: #F8FAFC; }
+
+/* Badge trạng thái trong bảng */
+.status-badge {
+    padding: 4px 10px;
+    border-radius: 20px;
+    font-size: 0.75rem;
+    font-weight: 600;
+}
+.status-high { background: var(--danger-soft); color: var(--danger); }
+.status-mid { background: var(--accent-soft); color: var(--accent); }
+.status-good { background: var(--success-soft); color: var(--success); }
     </style>
 </head>
 <body>
