@@ -949,6 +949,53 @@ table tr:nth-child(even) { background: #F8FAFC; }
         padding-right: 8px;
     }
 }
+        /* ===== TỐI ƯU BẢNG GIÁ GIỐNG BẢNG SO SÁNH ===== */
+.price-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    border-radius: var(--radius-sm);
+    overflow: hidden;
+}
+
+.price-table th {
+    background: #F8FAFC; /* Màu nền xám nhạt giống bảng so sánh */
+    color: var(--text-secondary);
+    padding: 14px 18px;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.95rem;
+    text-transform: none; /* Bỏ viết hoa toàn bộ để trông hiện đại hơn */
+    letter-spacing: normal;
+    border-bottom: 2px solid var(--border);
+}
+
+.price-table td {
+    padding: 14px 18px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.5;
+}
+
+/* Hiệu ứng dòng cuối nổi bật nếu muốn (tùy chọn) */
+.price-table tr:last-child td {
+    border-bottom: none;
+}
+
+/* Hiệu ứng hover nhẹ */
+.price-table tr:hover td {
+    background: #F1F5F9;
+}
+
+/* Mobile: Đảm bảo font chữ và khoảng cách trên điện thoại không bị quá to */
+@media (max-width: 768px) {
+    .price-table th, 
+    .price-table td {
+        font-size: 0.85rem;
+        padding: 10px 12px;
+    }
+}
     </style>
 </head>
 <body>
