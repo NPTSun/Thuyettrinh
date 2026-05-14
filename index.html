@@ -922,6 +922,33 @@ table tr:nth-child(even) { background: #F8FAFC; }
 .status-high { background: var(--danger-soft); color: var(--danger); }
 .status-mid { background: var(--accent-soft); color: var(--accent); }
 .status-good { background: var(--success-soft); color: var(--success); }
+        @media (max-width: 768px) {
+    /* ... các CSS khác của bạn ... */
+
+    .pain-bar-item { 
+        flex-direction: column; 
+        align-items: flex-start; 
+        gap: 8px; /* Khoảng cách giữa chữ và thanh bar */
+        margin-bottom: 15px;
+    }
+
+    .pain-bar-label { 
+        text-align: left; 
+        width: 100%; 
+        font-size: 16px; /* Giảm nhẹ font size để không bị chiếm chỗ */
+        line-height: 1.4;
+    }
+
+    .pain-bar-track {
+        width: 100%; /* Đảm bảo thanh bar chiếm hết chiều ngang màn hình */
+        height: 24px; /* Giảm chiều cao một chút cho thanh thoát */
+    }
+
+    .pain-bar-fill {
+        font-size: 0.7rem;
+        padding-right: 8px;
+    }
+}
     </style>
 </head>
 <body>
