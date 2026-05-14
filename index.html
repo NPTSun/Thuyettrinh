@@ -177,9 +177,28 @@
         @media (max-width: 768px) {
             .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
             .section-title { font-size: 2rem; }
+            .section-desc { font-size: 0.95rem; max-width: 100%; }
             .slide { padding: 60px 5% 40px; }
             .side-nav { display: none; }
             .hero-stats { flex-direction: column; }
+            html { font-size: 15px; }
+            .card { padding: 22px; font-size: 18px; }
+            .hero-title { font-size: 2.5rem; }
+            .hero-info-item { padding: 14px; }
+            .hero-info-item label,
+            .hero-info-item p { text-align: center; }
+            .hero-info-grid { gap: 18px; }
+            .demo-frame { height: 280px; }
+            .timeline { padding-left: 18px; }
+            .timeline-step::before { left: -28px; }
+            .price-table th, .price-table td,
+            .compare-table th, .compare-table td {
+                font-size: 0.9rem;
+                white-space: normal;
+                padding: 8px 10px;
+            }
+            .price-table { min-width: 100%; }
+            .compare-table { min-width: 100%; }
         }
 
         /* ===== HERO ===== */
@@ -808,6 +827,17 @@
             font-weight: 600;
         }
 
+        .table-responsive {
+            width: 100%;
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        .table-responsive table {
+            width: 100%;
+            min-width: 620px;
+            border-collapse: collapse;
+        }
+
         /* ===== SECTION DIVIDER ===== */
         .divider-section {
             min-height: auto;
@@ -966,23 +996,25 @@
             <div class="card-icon" style="background: var(--accent-soft); color: var(--accent);"><i class="fas fa-tags"></i></div>
             <div class="card-title">Bảng giá phòng trọ sinh viên tại Huế (2024-2025)</div>
         </div>
-        <table class="price-table">
-            <thead>
-                <tr>
-                    <th>Loại phòng</th>
-                    <th>Diện tích</th>
-                    <th>Giá / tháng</th>
-                    <th>Tiện nghi</th>
-                </tr>
-            </thead>
-            <tbody>
-                <tr><td>Bình dân</td><td>12-15 m²</td><td>800K – 1,2 triệu</td><td>WC chung/riêng, quạt</td></tr>
-                <tr><td>Khép kín tiêu chuẩn</td><td>15-20 m²</td><td>1,2 – 1,8 triệu</td><td>WC riêng, nóng lạnh, wifi</td></tr>
-                <tr><td>Phòng trọ cao cấp</td><td>20-30 m²</td><td>2 – 3 triệu</td><td>Nội thất, điều hòa, bếp riêng</td></tr>
-                <tr><td>Cao cấp (nội thất đầy đủ)</td><td>25-35 m²</td><td>2,5 – 4,5 triệu</td><td>Điều hòa, tủ lạnh, ban công, camera</td></tr>
-                <tr><td>Ở ghép</td><td>—</td><td>600K – 1 triệu / người</td><td>Chia phòng 2-3 người</td></tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="price-table">
+                <thead>
+                    <tr>
+                        <th>Loại phòng</th>
+                        <th>Diện tích</th>
+                        <th>Giá / tháng</th>
+                        <th>Tiện nghi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td>Bình dân</td><td>12-15 m²</td><td>800K – 1,2 triệu</td><td>WC chung/riêng, quạt</td></tr>
+                    <tr><td>Khép kín tiêu chuẩn</td><td>15-20 m²</td><td>1,2 – 1,8 triệu</td><td>WC riêng, nóng lạnh, wifi</td></tr>
+                    <tr><td>Phòng trọ cao cấp</td><td>20-30 m²</td><td>2 – 3 triệu</td><td>Nội thất, điều hòa, bếp riêng</td></tr>
+                    <tr><td>Cao cấp (nội thất đầy đủ)</td><td>25-35 m²</td><td>2,5 – 4,5 triệu</td><td>Điều hòa, tủ lạnh, ban công, camera</td></tr>
+                    <tr><td>Ở ghép</td><td>—</td><td>600K – 1 triệu / người</td><td>Chia phòng 2-3 người</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </section>
 
@@ -1087,15 +1119,17 @@
             <div class="card-icon" style="background: var(--purple-soft); color: var(--purple);"><i class="fas fa-balance-scale"></i></div>
             <div class="card-title">So sánh với các nền tảng hiện có</div>
         </div>
-        <table class="compare-table">
-            <thead><tr><th>Nền tảng</th><th>Ưu điểm</th><th>Nhược điểm</th></tr></thead>
-            <tbody>
-                <tr><td>Nhóm mạng xã hội</td><td>Phổ biến, dễ tiếp cận</td><td>Không kiểm duyệt, lừa đảo</td></tr>
-                <tr><td>Phongtro123.com</td><td>Chuyên cho thuê, toàn quốc</td><td>Không chuyên biệt sinh viên Huế</td></tr>
-                <tr><td>Tromoi.com</td><td>Có đánh giá, rõ ràng</td><td>Ít tin đăng tại Huế</td></tr>
-                <tr><td><strong>Hệ thống của chúng tôi</strong></td><td><strong>Chuyên biệt sinh viên Huế, xác minh, <br> bản đồ, lọc thông minh</strong></td><td>Cần xây dựng CSDL ban đầu</td></tr>
-            </tbody>
-        </table>
+        <div class="table-responsive">
+            <table class="compare-table">
+                <thead><tr><th>Nền tảng</th><th>Ưu điểm</th><th>Nhược điểm</th></tr></thead>
+                <tbody>
+                    <tr><td>Nhóm mạng xã hội</td><td>Phổ biến, dễ tiếp cận</td><td>Không kiểm duyệt, lừa đảo</td></tr>
+                    <tr><td>Phongtro123.com</td><td>Chuyên cho thuê, toàn quốc</td><td>Không chuyên biệt sinh viên Huế</td></tr>
+                    <tr><td>Tromoi.com</td><td>Có đánh giá, rõ ràng</td><td>Ít tin đăng tại Huế</td></tr>
+                    <tr><td><strong>Hệ thống của chúng tôi</strong></td><td><strong>Chuyên biệt sinh viên Huế, xác minh, <br> bản đồ, lọc thông minh</strong></td><td>Cần xây dựng CSDL ban đầu</td></tr>
+                </tbody>
+            </table>
+        </div>
     </div>
 </section>
 
